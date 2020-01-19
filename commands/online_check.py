@@ -32,4 +32,4 @@ def summon(args: list, store: Stoaring):
         if mem['online'] or not online:
             if 'screen_name' not in mem.keys: return # Если человек DELETED
             result += '['+mem['screen_name']+'|'+mem['first_name']+'] '
-    store.send(result)
+    return store.send(result)
