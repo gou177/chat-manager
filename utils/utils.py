@@ -3,10 +3,10 @@ import secrets
 import shutil
 
 
-
 def remove_folder_contents(path):
     shutil.rmtree(path)
     os.makedirs(path)
+
 
 def comma(num):
     num = round(int(num))
@@ -66,4 +66,3 @@ def textify_value(value):
     if avalue >= 1000:
         return str(round(value / 1000)) + " тыс."
     return str(value)
-
