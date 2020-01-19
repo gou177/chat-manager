@@ -3,12 +3,9 @@ from threading import Thread
 
 import requests
 import vk_api
-import json
 import os
-import re
-import sys
 
-from common import Logger
+
 from vk_api.bot_longpoll import VkBotMessageEvent, VkBotEventType
 
 from common.Store import api, session
@@ -62,7 +59,11 @@ class Longpoll:
                 for event in self.longpoll.listen():
                     if event.type == VkBotEventType.MESSAGE_NEW:
                         if event.obj.from_id > 0:
-                            pass
+
+                            if event.from_group:
+                                pass
+                            if event.from_chat:
+                                pass
 
             except requests.exceptions.ReadTimeout:
                 pass
