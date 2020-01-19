@@ -4,11 +4,11 @@ from threading import Thread
 import requests
 import vk_api
 import os
-
+import re
 
 from vk_api.bot_longpoll import VkBotMessageEvent, VkBotEventType
 
-from common.Store import api, session
+from common.Store import api, session, Stoaring
 from db import *
 
 
@@ -59,11 +59,14 @@ class Longpoll:
                 for event in self.longpoll.listen():
                     if event.type == VkBotEventType.MESSAGE_NEW:
                         if event.obj.from_id > 0:
-
-                            if event.from_group:
-                                pass
-                            if event.from_chat:
-                                pass
+                            ctx = Stoaring(event).init()
+                            if ctx.alive:
+                                command, args = self.check_command(event.obj.text)
+                                if command:
+                                    Logger.Pulselog(
+                                        f"{command} | {args} | {f'USSR: {event.obj.peer_id}' if not event.from_chat else f'ChAT: #{event.chat_id}, | USSR: {event.obj.from_id}'}")
+                                    self.command.cmd[command][0](args, ctx)
+                                    continue
 
             except requests.exceptions.ReadTimeout:
                 pass
@@ -78,3 +81,27 @@ class Longpoll:
             except Exception as s:
                 Logger.Rlog(f'{s.__class__} {s}')
                 raise
+
+    def check_command(self, text):
+        text = re.sub(r"^\[club\d+\|.+\]", '', text).strip()
+        text_copy = text
+        text = text.lower()
+        c = None
+        if len(text) == 0:
+            return False, False
+        p_ = 0
+
+        for p in self.prefixes:
+            if text.startswith(p):
+                text = text[len(p):]
+                p_ = len(p)
+                break
+
+        for comm in self.command.cmd:
+            if text.startswith(comm):
+                text_ = text.replace(comm, "", 1)
+                if text_.startswith(" ") or text_ == '':
+                    args = text_copy[len(comm) + 1 + p_:].strip()
+                    return comm, args.split()
+                continue
+        return False, False

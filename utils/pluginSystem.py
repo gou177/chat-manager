@@ -2,7 +2,6 @@ import time
 from threading import Thread
 
 from common import Logger
-from common.Store import st
 
 
 class EPlugin:
@@ -48,7 +47,7 @@ class EPlugin:
             time.sleep(wait)
         while True:
             try:
-                func(st)
+                func()
             except Exception as s:
                 print(s)
             finally:

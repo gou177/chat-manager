@@ -6,7 +6,6 @@ import vk_api
 
 import config
 from db import Global
-from utils import comma
 
 session = vk_api.VkApi(token=config.config['group_token'])
 api: vk_api.vk_api.VkApiMethod = session.get_api()
@@ -29,7 +28,13 @@ class Stoaring:
         self.body = self.obj.text
         self.upload = upload
 
-    def send(self, text='', attachment=None, sticker_id=None, keyboard=None, reply_to=None, peer_id=None, disable_mentions=1):
+    def send(self, text='',
+             attachment=None,
+             sticker_id=None,
+             keyboard=None,
+             reply_to=None,
+             peer_id=None,
+             disable_mentions=1):
         try:
             self._vk.messages.send(
                 peer_id=self.peer_id if not peer_id else peer_id,
@@ -63,9 +68,6 @@ class Stoaring:
         photo = self.upload.photo_messages(p)
         return f'photo{photo[0]["owner_id"]}_{photo[0]["id"]}'
 
-    @property
-    def balance(self):
-        return comma(self.data.money)
 
     @property
     def alive(self):
@@ -74,6 +76,7 @@ class Stoaring:
     def init(self):
         check_db: List[Global] = list(Global.select().where(Global.user_id == self.user_id))
         if check_db:
+            self.update(check_db[0])
             if check_db[0].ban:
                 self._alive = False
         else:
