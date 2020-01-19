@@ -1,1 +1,2 @@
+import vk_api
 
