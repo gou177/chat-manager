@@ -27,7 +27,7 @@ class VKRow:
         formatted_payload = None
         if type(payload) is str:
             formatted_payload = json.loads(payload)
-        if type(payload) is dict:
+        elif type(payload) is dict:
             formatted_payload = payload
         else:
             raise ValueError("Payload с некорректным типом")
@@ -94,7 +94,7 @@ class VKboard:
         del (self.buttons[index])
         return True
 
-    def edit(self, index):
+    def edit(self, index) -> VKRow:
         '''
         Отредактировать ряд с кнопками
         :param int index: Отредактировать определенный ряд с кнопками

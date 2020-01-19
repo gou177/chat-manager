@@ -27,9 +27,9 @@ def summon(args: list, store: Stoaring):
     if len(args) == 1:
         if "онлайн" in args or "online" in args:
             online = True
-    members = store.vk.messages.getConversationMessages(peer_id=store.peer_id)['profiles']
+    members = store.vk.messages.getConversationMembers(peer_id=store.peer_id)['profiles']
     for mem in members:
         if mem['online'] or not online:
-            if 'screen_name' not in mem.keys: return # Если человек DELETED
+            if 'screen_name' not in mem: return # Если человек DELETED
             result += '['+mem['screen_name']+'|'+mem['first_name']+'] '
     return store.send(result)
