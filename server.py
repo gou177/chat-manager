@@ -8,7 +8,6 @@ from common import Logger
 from vk_api.bot_longpoll import VkBotMessageEvent, VkBotEventType
 
 
-
 class Command:
     def __init__(self):
         self.cmd = {}
