@@ -1,1 +1,4 @@
-print('Тут запуск')
+from server import Longpoll
+
+bot = Longpoll()
+bot.start()
