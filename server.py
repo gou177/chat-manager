@@ -62,7 +62,10 @@ class Longpoll:
                 for event in self.longpoll.listen():
                     if event.type == VkBotEventType.MESSAGE_NEW:
                         if event.obj.from_id > 0:
-                            pass
+                            if event.from_group:
+                                pass
+                            if event.from_chat:
+                                pass
 
             except requests.exceptions.ReadTimeout:
                 pass
