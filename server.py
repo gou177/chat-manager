@@ -1,5 +1,5 @@
 from threading import Thread
-
+import vk_api
 import json
 import os
 import re
@@ -28,6 +28,14 @@ class Command:
                 Logger.Glog(f'Плагин {Logger.RED}[{module.theme}]{Logger.GREEN} загружен')
 
         return service_classes
+
+class Longpoll:
+
+    def __init__(self):
+        self.vk = vk_api.VkApi(token)
+        self.longpoll = VkBotLongPoll(self.vk)
+        self.vk_api = self.vk.get_api()
+
 
 
 
