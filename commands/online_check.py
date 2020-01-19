@@ -4,10 +4,10 @@ from utils import *
 
 plugin = EPlugin(theme="aaaaaa")
 
+
 @plugin.on_command(["online", "онлайн"])
 def check(args, store: Stoaring):
-    result = "Сейчас онлайн:"
-    msg = "\n"
+    msg = "\nСейчас онлайн:"
     online = []
 <<<<<<< HEAD
     members = store.vk.messages.getConversationMessages(peer_id=store.peer_id)['profiles']
@@ -17,6 +17,7 @@ def check(args, store: Stoaring):
     for mem in members:
         if mem['online']:
             online.append(f"{mem['first_name']} {mem['last_name']}")
+
     if len(online) == 0:
         return store.send("Никого нет онлайн")
 
