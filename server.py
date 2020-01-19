@@ -3,11 +3,10 @@ from threading import Thread
 import json
 import os
 import re
-import requests
 import sys
+from common import Logger
 from vk_api.bot_longpoll import VkBotMessageEvent, VkBotEventType
 
-from common.Store import *
 
 
 class Command:
