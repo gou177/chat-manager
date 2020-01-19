@@ -1,7 +1,12 @@
 import datetime
+import random
+from typing import List
+
 import vk_api
 
 import config
+from db import Global
+from utils import comma
 
 session = vk_api.VkApi(token=config.config['group_token'])
 api: vk_api.vk_api.VkApiMethod = session.get_api()
