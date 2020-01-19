@@ -7,6 +7,8 @@ import sys
 from common import Logger
 from vk_api.bot_longpoll import VkBotMessageEvent, VkBotEventType
 
+from db import con
+
 
 class Command:
     def __init__(self):
@@ -29,13 +31,14 @@ class Command:
 
         return service_classes
 
+
 class Longpoll:
 
     def __init__(self):
-        self.vk = vk_api.VkApi(token)
-        self.longpoll = VkBotLongPoll(self.vk)
-        self.vk_api = self.vk.get_api()
 
-
-
-
+        con()
+        self.vk = api
+        self.alert = st
+        self.prefixes = ['.', '/']
+        self.command = Command()
+        self.command.get()
