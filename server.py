@@ -1,3 +1,4 @@
+import json
 import time
 from threading import Thread
 
@@ -61,6 +62,17 @@ class Longpoll:
                         if event.obj.from_id > 0:
                             ctx = Stoaring(event).init()
                             if ctx.alive:
+                                if 'payload' in event.obj:
+
+                                    p = json.loads(event.obj['payload'])
+                                    if "command" in p:
+                                        if p['command'] in self.command.cmd_p:
+                                            Logger.Pulselog(
+                                                f"{p['command']} | {f'USSR: {event.obj.peer_id}' if not event.from_chat else f'ChAT: #{event.chat_id}, | USSR: {event.obj.from_id}'}")
+                                            Thread(target=self.command.cmd_p[p['command']][0],
+                                                   args=[[], ctx],
+                                                   daemon=True).start()
+                                            continue
                                 command, args = self.check_command(event.obj.text)
                                 if command:
                                     Logger.Pulselog(

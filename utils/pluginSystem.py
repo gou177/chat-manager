@@ -55,7 +55,7 @@ class EPlugin:
 
     def start(self, name):
         def wrapper(func):
-            thread_new = Thread(target=func, args=[st], daemon=True, name=name)
+            thread_new = Thread(target=func, args=[], daemon=True, name=name)
             thread_new.start()
             Logger.Linelog(f'Запущен поток {name}')
             return func
