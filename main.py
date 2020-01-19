@@ -1,3 +1,3 @@
 import vk_api
 
-print("Привет всем")
+print(vk_api.__version__)
