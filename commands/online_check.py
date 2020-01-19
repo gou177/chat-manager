@@ -9,11 +9,7 @@ plugin = EPlugin(theme="aaaaaa")
 def check(args, store: Stoaring):
     msg = "\nСейчас онлайн:"
     online = []
-<<<<<<< HEAD
-    members = store.vk.messages.getConversationMessages(peer_id=store.peer_id)['profiles']
-=======
     members = store.vk.messages.getConversationMembers(peer_id=store.peer_id)['profiles']
->>>>>>> 463b0722cb4b25d60e13d1dbf61b9d82a3d90697
     for mem in members:
         if mem['online']:
             online.append(f"{mem['first_name']} {mem['last_name']}")
