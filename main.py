@@ -1,3 +1,1 @@
-import vk_api
-
-print(vk_api.__version__)
+print('Тут запуск')
