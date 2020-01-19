@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
-
+from common.Store import Stoaring
 from utils import *
 
 plugin = EPlugin(theme="aaaaaa")
 
 @plugin.on_command(["online", "онлайн"])
-def check(args, store):
+def check(args, store: Stoaring):
     result = "Сейчас онлайн:"
+    msg = "\n"
     online = []
-    members = store._vk.messages.getConversationMessages(peer_id=store.peer_id)['profiles']
+    members = store.vk.messages.getConversationMembers(peer_id=store.peer_id)['profiles']
     for mem in members:
         if mem['online']:
-            online.append(mem['first_name']+' '+mem['last_name'] + ', ')
+            online.append(f"{mem['first_name']} {mem['last_name']}")
     if len(online) == 0:
-        result = "Никого нет онлайн"
-    else:
-        for name in online:
-            result += name
-        result = result[0:len(result)-2]
-    return store.send(result)
-    
+        return store.send("Никого нет онлайн")
+
+    msg += "\n".join(online)
+    return store.send(msg)
