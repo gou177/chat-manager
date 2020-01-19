@@ -25,6 +25,7 @@ class Stoaring:
         self.event = event
         self._vk = api
 
+        self.prefix = ''
         self.body = self.obj.text
         self.upload = upload
 
@@ -92,3 +93,7 @@ class Stoaring:
 
     def __repr__(self):
         return f'ctx: {self.user_id}'
+
+    @property
+    def vk(self):
+        return self._vk
