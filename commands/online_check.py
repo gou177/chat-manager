@@ -8,7 +8,7 @@ plugin = EPlugin(theme="aaaaaa")
 def check(args, store):
     result = "Сейчас онлайн:"
     online = []
-    members = store._vk.messages.getConversationMessages(peer_id=store.peer_id)['profiles']
+    members = store.vk.messages.getConversationMessages(peer_id=store.peer_id)['profiles']
     for mem in members:
         if mem['online']:
             online.append(mem['first_name']+' '+mem['last_name'] + ', ')
