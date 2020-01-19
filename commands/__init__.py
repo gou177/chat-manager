@@ -1,1 +1,1 @@
-from . import plugins, test
+from . import plugins, test, online_check
