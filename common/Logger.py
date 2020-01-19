@@ -13,14 +13,6 @@ PULSE = '\033[35m'
 
 logging.basicConfig(format='[%(asctime)s] %(message)s', level=logging.INFO)
 
-# console = logging.StreamHandler()
-# console.setLevel(logging.INFO)
-# formatter = logging.Formatter('[%(asctime)s] %(message)s')
-# console.setFormatter(formatter)
-
-
-# logging.getLogger('').addHandler(console)
-
 
 def printColored(string, color):
     logging.info("{}{}{}".format(color, string, ENDC))

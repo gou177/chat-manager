@@ -1,13 +1,18 @@
+import time
 from threading import Thread
+
+import requests
 import vk_api
 import json
 import os
 import re
 import sys
+
 from common import Logger
 from vk_api.bot_longpoll import VkBotMessageEvent, VkBotEventType
 
-from db import con
+from common.Store import api, session
+from db import *
 
 
 class Command:
@@ -38,7 +43,37 @@ class Longpoll:
 
         con()
         self.vk = api
-        self.alert = st
         self.prefixes = ['.', '/']
         self.command = Command()
         self.command.get()
+        self.settings = self.vk.groups.getById()
+        self.group_id = self.settings[0]['id']
+        self.ex = 0
+
+    def setLP(self):
+        self.longpoll = vk_api.bot_longpoll.VkBotLongPoll(session, self.group_id)
+
+    def start(self):
+        self.setLP()
+        Logger.Ylog(f'Бот запущен.\n'
+                    f'Группа https://vk.com/club{self.group_id}')
+        while True:
+            try:
+                for event in self.longpoll.listen():
+                    if event.type == VkBotEventType.MESSAGE_NEW:
+                        if event.obj.from_id > 0:
+                            pass
+
+            except requests.exceptions.ReadTimeout:
+                pass
+            except requests.exceptions.ConnectionError:
+                self.ex += 1
+                if self.ex > 10:
+                    Logger.Wlog('requests.exceptions.ConnectionError')
+                    self.ex = 0
+                    time.sleep(3600)
+                    self.setLP()
+                    Logger.Ylog('Едем дальше')
+            except Exception as s:
+                Logger.Rlog(f'{s.__class__} {s}')
+                raise
