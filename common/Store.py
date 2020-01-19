@@ -50,6 +50,27 @@ class Stoaring:
         except Exception as s:
             print(s)
 
+        def send(self, text='',
+                 attachment=None,
+                 sticker_id=None,
+                 keyboard=None,
+                 reply_to=None,
+                 peer_id=None,
+                 disable_mentions=1):
+            try:
+                self._vk.messages.send(
+                    peer_id=self.peer_id if not peer_id else peer_id,
+                    message=self.prefix + str(text),
+                    keyboard=keyboard,
+                    random_id=self._random,
+                    attachment=attachment,
+                    sticker_id=sticker_id,
+                    disable_mentions=disable_mentions
+                )
+                self.prefix = ''
+            except Exception as s:
+                print(s)
+
     @property
     def _random(self):
         return random.randint(-1000000, 1000000)
