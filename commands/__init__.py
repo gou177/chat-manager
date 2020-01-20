@@ -1,1 +1,1 @@
-from . import plugins
+from . import plugins, test, online_check, goplen
