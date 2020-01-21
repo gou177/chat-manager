@@ -9,7 +9,8 @@ class Test(Enum):
 
 @plugin.on_command(['кик'])
 def kick(args, store):
-    store.send('Вы кикнули человека')
+    store.send(f'Вы кикнули человека')
+
 
 @plugin.on_command(['id'])
 def id_user(args, store):
