@@ -1,5 +1,6 @@
 from utils import EPlugin
 from enum import Enum
+from common.KEY import *
 
 plugin = EPlugin(theme='command')
 
@@ -37,4 +38,8 @@ def klicker(args, store):
             store.send('Типо пользователь есть уже')
     else:
         store.send('ТЫ НЕ АДМИН')
+
+@plugin.on_command(['key'])
+def key(args, store):
+    store.send('в', keyboard=keyboard.get_keyboard())
 
