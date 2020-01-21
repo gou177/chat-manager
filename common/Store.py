@@ -108,7 +108,7 @@ class Stoaring:
                 user_id=self.user_id,
                 prefix=name,
             )
-            self.send(f'Жопа')
+            print("В базу данных добавлен новый пользователь!")
         self.update()
         return self
 

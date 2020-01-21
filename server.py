@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import time
 from threading import Thread
@@ -17,6 +18,7 @@ class Command:
     def __init__(self):
         self.cmd = {}
         self.cmd_p = {}
+        self.cmd_msg = {}
 
     def get(self):
         services = os.listdir('commands')
@@ -59,6 +61,13 @@ class Longpoll:
             try:
                 for event in self.longpoll.listen():
                     if event.type == VkBotEventType.MESSAGE_NEW:
+                        for pref in self.prefixes:
+                            if event.obj["text"].startswith(pref):
+                                event.obj["text"] = event.obj["text"][len(pref):]
+                                break
+                        else: # Если сообщение не начинается ни с одного из префиксов,
+                              # не обрабатываем его
+                            continue
                         if event.obj.from_id > 0:
                             ctx = Stoaring(event).init()
                             if ctx.alive:
@@ -95,6 +104,16 @@ class Longpoll:
                 raise
 
     def check_command(self, text):
+        # FIXME - Функция почему то не откидывает сообщения,
+        # не начинающиеся с префикса.
+
+        # Или я чего то не понимаю.
+
+        # Код необработки сообщения без префикса я добавил 
+        # в начало цикла с лонгпулом.
+
+        # Если я тупой дерьмо, и все так и запланированно,
+        # удалите его.
         text = re.sub(r"^\[club\d+\|.+\]", '', text).strip()
         text_copy = text
         text = text.lower()

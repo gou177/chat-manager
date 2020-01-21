@@ -1,7 +1,18 @@
+# -*- coding: utf-8 -*-
 import os
 import secrets
 import shutil
 
+dev_list = [] # TODO - добавить id всех разработчиков
+
+def isAdmin(store):
+    if store.user_id in dev_list:
+        return True
+    members = store.vk.messages.getConversationMembers(peer_id=store.peer_id)["items"]
+    for mem in members:
+        if mem.get("is_admin", False) and store.user_id == mem["member_id"]:
+            return True
+    return False
 
 def remove_folder_contents(path):
     shutil.rmtree(path)
