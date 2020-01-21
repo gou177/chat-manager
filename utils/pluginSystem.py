@@ -18,7 +18,7 @@ class EPlugin:
                 if 'command' in payload:
                     self.cmd_p[payload['command']] = [func]
                 else:
-                    raise IndexError('ДЕбил блять укажи нормальную команду в Жсон')
+                    raise IndexError('Дeбил, укажи нормальную команду в Жсон')
 
             if command is not None:
                 if type(command) in (list, tuple):

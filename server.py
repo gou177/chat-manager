@@ -30,7 +30,7 @@ class Command:
                     self.cmd[c] = v
                 for c, v in module.cmd_p.items():
                     self.cmd_p[c] = v
-                Logger.Glog(f'Плагин {Logger.RED}[{module.theme}]{Logger.GREEN} загружен')
+                Logger.Glog(f'Плагин [{module.theme}] загружен')
 
         return service_classes
 
@@ -63,12 +63,11 @@ class Longpoll:
                             ctx = Stoaring(event).init()
                             if ctx.alive:
                                 if 'payload' in event.obj:
-
                                     p = json.loads(event.obj['payload'])
                                     if "command" in p:
                                         if p['command'] in self.command.cmd_p:
                                             Logger.Pulselog(
-                                                f"{p['command']} | {f'USSR: {event.obj.peer_id}' if not event.from_chat else f'ChAT: #{event.chat_id}, | USSR: {event.obj.from_id}'}")
+                                                f"{p['command']} | {f'USER: {event.obj.peer_id}' if not event.from_chat else f'Chat: #{event.chat_id}, | USER: {event.obj.from_id}'}")
                                             Thread(target=self.command.cmd_p[p['command']][0],
                                                    args=[[], ctx],
                                                    daemon=True).start()
@@ -76,10 +75,11 @@ class Longpoll:
                                 command, args = self.check_command(event.obj.text)
                                 if command:
                                     Logger.Pulselog(
-                                        f"{command} | {args} | {f'USSR: {event.obj.peer_id}' if not event.from_chat else f'ChAT: #{event.chat_id}, | USSR: {event.obj.from_id}'}")
+                                        f"{command} | {args} | {f'USER: {event.obj.peer_id}' if not event.from_chat else f'Chat: #{event.chat_id}, | USER: {event.obj.from_id}'}")
                                     self.command.cmd[command][0](args, ctx)
                                     continue
-
+                    elif event.type == VkBotEventType.USER_TYPING:
+                        continue
             except requests.exceptions.ReadTimeout:
                 pass
             except requests.exceptions.ConnectionError:

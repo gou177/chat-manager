@@ -108,7 +108,7 @@ class Stoaring:
                 user_id=self.user_id,
                 prefix=name,
             )
-            self.send(f'Жопа')
+            self.send(f'Данные сохранены')
         self.update()
         return self
 
