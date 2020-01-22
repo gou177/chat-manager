@@ -18,7 +18,6 @@ class Command:
     def __init__(self):
         self.cmd = {}
         self.cmd_p = {}
-        self.cmd_msg = {}
 
     def get(self):
         services = os.listdir('commands')
@@ -98,26 +97,19 @@ class Longpoll:
 
     def check_command(self, text):
         text = re.sub(r"^\[club\d+\|.+\]", '', text).strip()
-        text_copy = text
         text = text.lower()
-        c = None
         if len(text) == 0:
             return False, False
-        p_ = 0
 
         for p in self.prefixes:
             if text.startswith(p):
-                text = text[len(p):]
-                p_ = len(p)
+                text = text[len(p):] + ' '
                 break
         else:
             return False, False
 
+        if len(text.split()) == 0: return False, False
         for comm in self.command.cmd:
-            if text.startswith(comm):
-                text_ = text.replace(comm, "", 1)
-                if text_.startswith(" ") or text_ == '':
-                    args = text_copy[len(comm) + 1 + p_:].strip()
-                    return comm, args.split()
-                continue
+            if comm == text.split()[0]:
+                return comm, text.split()[1:]
         return False, False
