@@ -74,6 +74,9 @@ def mark(args: List[str], store: Stoaring):
         except KeyError:
             store.send("Неправильный id. Убедитесь, что id - не ссылка, или попробуйте без @ или *")
             return
+        except TypeError:
+            store.send("Неправильный id. Убедитесь, что id - не ссылка, или попробуйте без @ или *")
+            return
         
         vk_id = str(vk_id)
         peer_id = str(store.peer_id)
@@ -99,6 +102,9 @@ def mark(args: List[str], store: Stoaring):
         try:
             vk_id = store.vk.utils.resolveScreenName(screen_name=args[0])["object_id"]
         except KeyError:
+            store.send("Неправильный id. Убедитесь, что id - не ссылка, или попробуйте без @ или *")
+            return
+        except TypeError:
             store.send("Неправильный id. Убедитесь, что id - не ссылка, или попробуйте без @ или *")
             return
         
