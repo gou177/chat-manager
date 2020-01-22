@@ -103,7 +103,7 @@ class Longpoll:
 
         for p in self.prefixes:
             if text.startswith(p):
-                text = text[len(p):] + ' '
+                text = text[len(p):]
                 break
         else:
             return False, False
