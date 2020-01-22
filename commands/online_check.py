@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from common.Store import Stoaring
 from utils import *
-
+import requests
 
 plugin = EPlugin(theme="ConvUtils")
 
@@ -37,7 +37,7 @@ def check(args: list, store: Stoaring):
         check_close = 'открытая'
         sex = 'М'
         print(profile)
-        if profile['is_closed'] == True:
+        if profile['is_closed'] == True: # Проверка на то, открыта страница или нет
             check_close = 'закрытая'
         if profile['sex'] == 1:
             sex = 'Ж'
@@ -60,9 +60,27 @@ def delphotos(args: list, store: Stoaring):
 
 @plugin.on_command(["changename", "сменитьназвание"])
 def changenameo(args: list, store: Stoaring):
-    print(args)
     changen = store.vk.messages.editChat(chat_id=store.event.chat_id, title=' '.join(args))
     return store.send('я молодец, я сменил название беседы &#128570;')
+
+
+@plugin.on_command(['id', 'ид'])
+def id_user(args: list, store: Stoaring):
+    try:
+        user_id = store.event.obj['reply_message']['from_id']
+        return store.send(f'id пользователя: {user_id}')
+    except KeyError:
+        return store.send(f'ваш id: {store.user_id}')
+
+
+@plugin.on_command(["kick", "кик"])
+def kickuser(args: list, store: Stoaring):
+    try:
+        user_id = store.event.obj['reply_message']['from_id']
+        kickid = store.vk.messages.removeChatUser(chat_id=store.event.chat_id, member_id=user_id)
+        return store.send('я молодец, я кикнул его из беседы &#128570;')
+    except KeyError:
+        return store.send('возникла ошибка. Разраб рукожоп!')
 
 ### TODO до лучших дней
 # @plugin.on_command(["pin", "закреп"])
@@ -71,10 +89,29 @@ def changenameo(args: list, store: Stoaring):
 #     return store.send('я молодец, я закрепил сообщение &#128570;')
 
 
-# @plugin.on_command(["whois", "ктоты"])
-# def whoru(args: list, store: Stoaring):
-#     get = store.vk.users.get(user_id=store.event.obj['reply_message']['from_id'], fields=['verified', 'bdate', 'city', 'country', 'status','timezone'], name_case='nom')
-#     print(get)
+@plugin.on_command(["whois", "ктоты"])
+def whoru(args: list, store: Stoaring):
+    try:
+        fields = ['verified', 'city', 'country', 'timezone']
+        user_id = store.event.obj['reply_message']['from_id'] # Получаем id пользователя
+        get = store.vk.users.get(user_id=user_id, fields=fields, name_case='nom')[0]
+
+        get_xml = requests.get(f'https://vk.com/foaf.php?id={user_id}').text.split() # Запрос к серверу VK
+        xml_data = []
+        for xml in get_xml:
+            if 'dc:date' in xml: # Поиск дат
+                xml_data.append(xml[xml.index('2'):xml.index('T')]) # Добавление найденной даты с лис
+        dreg = xml_data[0]
+
+        name = get['first_name'] + ' ' + get['last_name']
+        date_of_reg = dreg[8:10] + '.' + dreg[5:7] + '.' + dreg[0:4] # Собираем дату по частям
+        
+        return store.send(f'\nИмя: {name} \nДата регистрации: {date_of_reg}')
+    except Exception as e:
+        print('Error:', e)
+        return store.send('мне нужно сообщение человека, про которого вы хотите узнать.')
+    
+    
 
 
 
