@@ -47,22 +47,6 @@ def check(args: list, store: Stoaring):
     msg += "\n".join(mem_list)
     return store.send(msg)
 
-@plugin.on_command(["fakea", "типоаудио"])
-def fakeaudio(args: list, store: Stoaring):
-    return store.vk.messages.setActivity(user_id=store.user_id , type='audiomessage', peer_id=store.peer_id, group_id=191058623)
-
-
-@plugin.on_command(["deletephoto", "удалитьфото"])
-def delphotos(args: list, store: Stoaring):
-    delphoto = store.vk.messages.deleteChatPhoto(chat_id=store.event.chat_id, group_id=store.event.group_id)
-    return store.send('я молодец, я удалил фото беседы &#128570;')
-
-
-@plugin.on_command(["changename", "сменитьназвание"])
-def changenameo(args: list, store: Stoaring):
-    changen = store.vk.messages.editChat(chat_id=store.event.chat_id, title=' '.join(args))
-    return store.send('я молодец, я сменил название беседы &#128570;')
-
 
 @plugin.on_command(['id', 'ид'])
 def id_user(args: list, store: Stoaring):
@@ -111,9 +95,6 @@ def whoru(args: list, store: Stoaring):
         print('Error:', e)
         return store.send('мне нужно сообщение человека, про которого вы хотите узнать.')
     
-    
-
-
 
 @plugin.on_command(["summon", "сбор"])
 def summon(args: list, store: Stoaring):
