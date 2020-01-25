@@ -19,17 +19,3 @@ def check(args: list, store: Stoaring):
 
     msg += "\n".join(online)
     return store.send(msg)
-
-@plugin.on_command(["summon", "сбор"])
-def summon(args: list, store: Stoaring):
-    online = False
-    result = "\nОбщий сбор!\n"
-    if len(args) == 1:
-        if "онлайн" in args or "online" in args:
-            online = True
-    members = store.vk.messages.getConversationMembers(peer_id=store.peer_id)['profiles']
-    for mem in members:
-        if mem['online'] or not online:
-            if 'screen_name' not in mem: return # Если человек DELETED
-            result += '['+mem['screen_name']+'|'+mem['first_name']+'] '
-    return store.send(result)
