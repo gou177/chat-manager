@@ -108,6 +108,8 @@ class Longpoll:
                 text = text[len(p):]
                 p_ = len(p)
                 break
+        else:
+            return False, False
 
         for comm in self.command.cmd:
             if text.startswith(comm):
