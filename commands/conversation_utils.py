@@ -2,7 +2,7 @@ from typing import List
 
 from common.Store import Stoaring
 from utils import *
-from .marking_db.marking_db import is_user_marked, mark_user, unmark_user
+from .marking_db.marking_db import is_user_marked, mark_user, unmark_user, delete_mark
 
 plugin = EPlugin(theme="ConversationUtils")
 
@@ -73,6 +73,7 @@ def mark(args: List[str], store: Stoaring):
             )
             return
 
+        print("Отмечаю пользователя id%i в чате %i как %s" % (vk_id, store.peer_id, args[1]))
         mark_user(store.peer_id, args[1], vk_id)
 
         return store.send("Успешно")
@@ -110,6 +111,28 @@ def mark(args: List[str], store: Stoaring):
         result = unmark_user(store.peer_id, args[1], vk_id)
         
         return store.send("Успешно" if result else "Отметка отсутствует")
+
+@plugin.on_command("delmark")
+def delmark(args: List[str], store: Stoaring):
+    if len(args) == 0:
+        return store.send(
+            "Неправильное использование команды"
+            "\n\nИспользование: /delmark <отметка_1> "
+            "[отметка_2 отметка_3 ... отметка_n]"
+        )
+    else:
+        deleted = 0
+        not_found = 0
+        for mark in args:
+            if delete_mark(store.peer_id, mark):
+                deleted += 1
+            else:
+                not_found += 1
+        
+        return store.send(
+            "Операция завершена. Удалено %i "
+            "отметок и %i отметок не найдено" % (deleted, not_found)
+        )
 
 @plugin.on_command(["69", "420"])
 def nice(args: List[str], store: Stoaring):

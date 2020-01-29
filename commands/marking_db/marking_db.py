@@ -32,37 +32,31 @@ class User(Model):
         db_table = "users"
 
 def get_chat(peer_id, make_if_none=True):
-    try:
-        chat = Chat.get(Chat.peer_id == peer_id)
+    chat = Chat.get_or_none(Chat.peer_id == peer_id)
+    if chat or not make_if_none:
         return chat
-    except DoesNotExist:
-        if not make_if_none:
-            return
-        row = Chat(peer_id=peer_id)
-        row.save()
-        return row
+    else:
+        chat = Chat(peer_id=peer_id)
+        chat.save()
+        return chat
 
 def get_mark(mark, chat, make_if_none=True):
-    try:
-        m = Mark.get(Mark.mark == mark and Mark.chat == chat)
+    m = Mark.get_or_none(Mark.mark == mark, Mark.chat == chat)
+    if m or not make_if_none:
         return m
-    except DoesNotExist:
-        if not make_if_none:
-            return
-        row = Mark(mark=mark, chat=chat)
-        row.save()
-        return row
+    else:
+        m = Mark(mark=mark, chat=chat)
+        m.save()
+        return m
 
 def get_user(user_id, mark, make_if_none=True):
-    try:
-        user = User.get(User.mark == mark and User.user_id == user_id)
+    user = User.get_or_none(User.mark == mark, User.user_id == user_id)
+    if user or not make_if_none:
         return user
-    except DoesNotExist:
-        if not make_if_none:
-            return
-        row = User(mark=mark, user_id=user_id)
-        row.save()
-        return row
+    else:
+        user = User(mark=mark, user_id=user_id)
+        user.save()
+        return user
 
 def mark_user(peer_id: int, mark: str, user_id: int):
     c = get_chat(peer_id)
@@ -74,7 +68,7 @@ def is_user_marked(peer_id: int, mark: str, user_id: int):
     if c:
         m = get_mark(mark, c, make_if_none=False)
         if m:
-            u = get_user(user_id, mark, make_if_none=False)
+            u = get_user(user_id, m, make_if_none=False)
             if u:
                 return True
     return False
@@ -88,10 +82,26 @@ def unmark_user(peer_id: int, mark: str, user_id: int):
             if u:
                 return u.delete_instance()
 
+def delete_mark(peer_id: int, mark: str):
+    c = get_chat(peer_id, make_if_none=False)
+    if c:
+        m = get_mark(mark, c, make_if_none=False)
+        if m:
+            for u in User.select().where(User.mark == m):
+                u.delete_instance()
+            m.delete_instance()
+            return True
+    return False
+
 def initialize():
-    Chat.create_table()
-    Mark.create_table()
-    User.create_table()
-    time.sleep(0.5)
+    try:
+        db.connect()
+        Chat.create_table()
+        Mark.create_table()
+        User.create_table()
+        time.sleep(0.5)
+    except InternalError as px:
+        print(str(px))
+        raise
 
 initialize()
